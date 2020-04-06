@@ -24,3 +24,13 @@ curl -sS http://localhost:8482/api/users \
 echo "GET /api/users/:id -- get user that we just posted"
 ID=$(printf "%s" "$USER" | jq -r .id)
 curl -sS "http://localhost:8482/api/users/${ID}" | jq .
+
+# Test deleting a user
+echo "DELETE /api/users/:id -- make a new user and then delete them"
+NEW_USER_ID=$(
+    curl -sS http://localhost:8482/api/users \
+        -H "Content-Type: application/json" \
+        -d '{ "name":"delet this", "bio":"to be deleted" }' \
+    | jq -r .id
+)
+curl -sS -X DELETE "http://localhost:8482/api/users/${NEW_USER_ID}" | jq .

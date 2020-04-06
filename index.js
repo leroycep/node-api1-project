@@ -60,6 +60,22 @@ server.post("/api/users", (req, res) => {
   res.status(400).json({ error: "invalid user object" });
 });
 
+server.delete("/api/users/:id", (req, res) => {
+  const id_str = req.params.id;
+  try {
+    const id = parseInt(id_str);
+    const userIdx = users.findIndex((u) => u.id === id);
+    if (userIdx >= -1) {
+      const user = users.splice(userIdx, 1)[0];
+      res.status(200).json(user);
+    } else {
+      res.status(400).json({ message: "no user found with specified id", id });
+    }
+  } catch {
+    res.status(400).json({ message: "invalid id" });
+  }
+});
+
 // Start listening!
 server.listen(port, () => {
   console.log(` == Server listening on port ${port} ==`);
