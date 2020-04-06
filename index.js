@@ -34,7 +34,7 @@ server.get("/api/users/:id", (req, res) => {
     if (user) {
       res.status(200).json(user);
     } else {
-      res.status(400).json({ message: "no user found with specified id", id });
+      res.status(404).json({ message: "The user with the specified ID does not exist." });
     }
   } catch {
     res.status(400).json({ message: "invalid id" });
@@ -57,7 +57,7 @@ server.post("/api/users", (req, res) => {
     }
   }
 
-  res.status(400).json({ error: "invalid user object" });
+  res.status(400).json({ errorMessage: "Please provide name and bio for the user." });
 });
 
 server.delete("/api/users/:id", (req, res) => {
@@ -69,7 +69,7 @@ server.delete("/api/users/:id", (req, res) => {
       const user = users.splice(userIdx, 1)[0];
       res.status(200).json(user);
     } else {
-      res.status(400).json({ message: "no user found with specified id", id });
+      res.status(404).json({ message: "The user with the specified ID does not exist." });
     }
   } catch {
     res.status(400).json({ message: "invalid id" });
