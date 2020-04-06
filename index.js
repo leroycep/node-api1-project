@@ -34,7 +34,9 @@ server.get("/api/users/:id", (req, res) => {
     if (user) {
       res.status(200).json(user);
     } else {
-      res.status(404).json({ message: "The user with the specified ID does not exist." });
+      res
+        .status(404)
+        .json({ message: "The user with the specified ID does not exist." });
     }
   } catch {
     res.status(400).json({ message: "invalid id" });
@@ -57,7 +59,9 @@ server.post("/api/users", (req, res) => {
     }
   }
 
-  res.status(400).json({ errorMessage: "Please provide name and bio for the user." });
+  res
+    .status(400)
+    .json({ errorMessage: "Please provide name and bio for the user." });
 });
 
 server.delete("/api/users/:id", (req, res) => {
@@ -69,7 +73,42 @@ server.delete("/api/users/:id", (req, res) => {
       const user = users.splice(userIdx, 1)[0];
       res.status(200).json(user);
     } else {
-      res.status(404).json({ message: "The user with the specified ID does not exist." });
+      res
+        .status(404)
+        .json({ message: "The user with the specified ID does not exist." });
+    }
+  } catch {
+    res.status(400).json({ message: "invalid id" });
+  }
+});
+
+server.put("/api/users/:id", (req, res) => {
+  const id_str = req.params.id;
+  const newPerson = req.body;
+
+  if (newPerson) {
+    if (
+      Object.keys(newPerson).length !== 2 ||
+      newPerson.name === undefined ||
+      newPerson.bio === undefined
+    ) {
+      res
+        .status(400)
+        .json({ errorMessage: "Please provide name and bio for the user." });
+      return;
+    }
+  }
+
+  try {
+    const id = parseInt(id_str);
+    const userIdx = users.findIndex((u) => u.id === id);
+    if (userIdx >= -1) {
+      users[userIdx] = { ...newPerson, id };
+      res.status(200).json(users[userIdx]);
+    } else {
+      res
+        .status(404)
+        .json({ message: "The user with the specified ID does not exist." });
     }
   } catch {
     res.status(400).json({ message: "invalid id" });

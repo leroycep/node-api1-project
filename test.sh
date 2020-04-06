@@ -34,3 +34,14 @@ NEW_USER_ID=$(
     | jq -r .id
 )
 curl -sS -X DELETE "http://localhost:8482/api/users/${NEW_USER_ID}" | jq .
+
+# Test updating a user
+echo "PUT /api/users/:id -- edit a user"
+curl -sS -X PUT "http://localhost:8482/api/users/${ID}" \
+    -H "Content-Type: application/json" \
+    -d '{ "name":"Ryuko Matoi", "bio":"Scissor girl" }' | jq .
+
+
+echo "GET /api/users -- See the result of all the testing!"
+curl -sS http://localhost:8482/api/users | jq .
+
