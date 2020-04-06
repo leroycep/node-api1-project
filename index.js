@@ -26,13 +26,26 @@ server.get("/api/users", (req, res) => {
   res.status(200).json(users);
 });
 
+server.get("/api/users/:id", (req, res) => {
+  const id_str = req.params.id;
+  try {
+    const id = parseInt(id_str);
+    const user = users.find((u) => u.id === id);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(400).json({ message: "no user found with specified id", id });
+    }
+  } catch {
+    res.status(400).json({ message: "invalid id" });
+  }
+});
+
 server.post("/api/users", (req, res) => {
   const newPerson = req.body;
 
   if (newPerson) {
     const properties = Object.keys(newPerson);
-    console.log(properties);
-    console.log(req);
     if (
       properties.length === 2 &&
       newPerson.name !== undefined &&
@@ -44,7 +57,7 @@ server.post("/api/users", (req, res) => {
     }
   }
 
-  res.status(400).json({error: "invalid user object"});
+  res.status(400).json({ error: "invalid user object" });
 });
 
 // Start listening!
